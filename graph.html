@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 700px;
+                 background-color: #111111;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#aaaaaa", "font": {"color": "white"}, "id": "Barristan-Selmy", "label": "Barristan-Selmy", "shape": "dot", "size": 24.393442238504655, "title": "Barristan-Selmy | Family: Selmy"}, {"color": "#ffcc00", "font": {"color": "white"}, "id": "Renly-Baratheon", "label": "Renly-Baratheon", "shape": "dot", "size": 25.85136190487055, "title": "Renly-Baratheon | Family: Baratheon"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Theon-Greyjoy", "label": "Theon-Greyjoy", "shape": "dot", "size": 24.76613476565469, "title": "Theon-Greyjoy | Family: Greyjoy"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Jorah-Mormont", "label": "Jorah-Mormont", "shape": "dot", "size": 25.537426167724583, "title": "Jorah-Mormont | Family: Mormont"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Luwin", "label": "Luwin", "shape": "dot", "size": 27.280616961908073, "title": "Luwin | Family: Unknown"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Drogo", "label": "Drogo", "shape": "dot", "size": 30.482782228092983, "title": "Drogo | Family: Unknown"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Jon-Snow", "label": "Jon-Snow", "shape": "dot", "size": 48.62480690123335, "title": "Jon-Snow | Family: Snow"}, {"color": "#d62728", "font": {"color": "white"}, "id": "Jaime-Lannister", "label": "Jaime-Lannister", "shape": "dot", "size": 28.64199894322762, "title": "Jaime-Lannister | Family: Lannister"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Sandor-Clegane", "label": "Sandor-Clegane", "shape": "dot", "size": 24.488823913183065, "title": "Sandor-Clegane | Family: Clegane"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Samwell-Tarly", "label": "Samwell-Tarly", "shape": "dot", "size": 25.826959536570513, "title": "Samwell-Tarly | Family: Tarly"}, {"color": "#1f77b4", "font": {"color": "white"}, "id": "Eddard-Stark", "label": "Eddard-Stark", "shape": "dot", "size": 63.4169721594203, "title": "Eddard-Stark | Family: Stark"}, {"color": "#1f77b4", "font": {"color": "white"}, "id": "Arya-Stark", "label": "Arya-Stark", "shape": "dot", "size": 32.899244472646366, "title": "Arya-Stark | Family: Stark"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Petyr-Baelish", "label": "Petyr-Baelish", "shape": "dot", "size": 29.72326976900807, "title": "Petyr-Baelish | Family: Baelish"}, {"color": "#1f77b4", "font": {"color": "white"}, "id": "Robb-Stark", "label": "Robb-Stark", "shape": "dot", "size": 37.52853029251757, "title": "Robb-Stark | Family: Stark"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Bronn", "label": "Bronn", "shape": "dot", "size": 24.86167109703206, "title": "Bronn | Family: Unknown"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Jon-Arryn", "label": "Jon-Arryn", "shape": "dot", "size": 25.77620011955029, "title": "Jon-Arryn | Family: Arryn"}, {"color": "#1f77b4", "font": {"color": "white"}, "id": "Sansa-Stark", "label": "Sansa-Stark", "shape": "dot", "size": 36.166797607844025, "title": "Sansa-Stark | Family: Stark"}, {"color": "#d62728", "font": {"color": "white"}, "id": "Cersei-Lannister", "label": "Cersei-Lannister", "shape": "dot", "size": 32.97222255463168, "title": "Cersei-Lannister | Family: Lannister"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Lysa-Arryn", "label": "Lysa-Arryn", "shape": "dot", "size": 25.877454395970553, "title": "Lysa-Arryn | Family: Arryn"}, {"color": "#ffcc00", "font": {"color": "white"}, "id": "Joffrey-Baratheon", "label": "Joffrey-Baratheon", "shape": "dot", "size": 32.403243009839684, "title": "Joffrey-Baratheon | Family: Baratheon"}, {"color": "#d62728", "font": {"color": "white"}, "id": "Tywin-Lannister", "label": "Tywin-Lannister", "shape": "dot", "size": 26.854482784870275, "title": "Tywin-Lannister | Family: Lannister"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Varys", "label": "Varys", "shape": "dot", "size": 26.89836427601618, "title": "Varys | Family: Unknown"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Pycelle", "label": "Pycelle", "shape": "dot", "size": 24.599492875024296, "title": "Pycelle | Family: Unknown"}, {"color": "#1f77b4", "font": {"color": "white"}, "id": "Bran-Stark", "label": "Bran-Stark", "shape": "dot", "size": 37.86202996359336, "title": "Bran-Stark | Family: Stark"}, {"color": "#d62728", "font": {"color": "white"}, "id": "Tyrion-Lannister", "label": "Tyrion-Lannister", "shape": "dot", "size": 46.205787893757275, "title": "Tyrion-Lannister | Family: Lannister"}, {"color": "#e600ff", "font": {"color": "white"}, "id": "Daenerys-Targaryen", "label": "Daenerys-Targaryen", "shape": "dot", "size": 36.25916777132855, "title": "Daenerys-Targaryen | Family: Targaryen"}, {"color": "#1f77b4", "font": {"color": "white"}, "id": "Catelyn-Stark", "label": "Catelyn-Stark", "shape": "dot", "size": 40.79996792681814, "title": "Catelyn-Stark | Family: Stark"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Rodrik-Cassel", "label": "Rodrik-Cassel", "shape": "dot", "size": 24.544152889102953, "title": "Rodrik-Cassel | Family: Cassel"}, {"color": "#ffcc00", "font": {"color": "white"}, "id": "Robert-Baratheon", "label": "Robert-Baratheon", "shape": "dot", "size": 49.09620317664097, "title": "Robert-Baratheon | Family: Baratheon"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Jory-Cassel", "label": "Jory-Cassel", "shape": "dot", "size": 25.65421395892421, "title": "Jory-Cassel | Family: Cassel"}, {"color": "#aaaaaa", "font": {"color": "white"}, "id": "Jeor-Mormont", "label": "Jeor-Mormont", "shape": "dot", "size": 26.970769032822762, "title": "Jeor-Mormont | Family: Mormont"}]);
+                  edges = new vis.DataSet([{"from": "Barristan-Selmy", "to": "Cersei-Lannister", "value": 12}, {"from": "Barristan-Selmy", "to": "Eddard-Stark", "value": 28}, {"from": "Barristan-Selmy", "to": "Jaime-Lannister", "value": 4}, {"from": "Barristan-Selmy", "to": "Joffrey-Baratheon", "value": 6}, {"from": "Barristan-Selmy", "to": "Jon-Arryn", "value": 4}, {"from": "Barristan-Selmy", "to": "Petyr-Baelish", "value": 7}, {"from": "Barristan-Selmy", "to": "Pycelle", "value": 8}, {"from": "Barristan-Selmy", "to": "Renly-Baratheon", "value": 13}, {"from": "Barristan-Selmy", "to": "Robert-Baratheon", "value": 40}, {"from": "Barristan-Selmy", "to": "Sandor-Clegane", "value": 3}, {"from": "Barristan-Selmy", "to": "Sansa-Stark", "value": 3}, {"from": "Barristan-Selmy", "to": "Varys", "value": 9}, {"from": "Renly-Baratheon", "to": "Bran-Stark", "value": 3}, {"from": "Renly-Baratheon", "to": "Cersei-Lannister", "value": 5}, {"from": "Renly-Baratheon", "to": "Eddard-Stark", "value": 33}, {"from": "Renly-Baratheon", "to": "Jaime-Lannister", "value": 4}, {"from": "Renly-Baratheon", "to": "Joffrey-Baratheon", "value": 9}, {"from": "Renly-Baratheon", "to": "Petyr-Baelish", "value": 12}, {"from": "Renly-Baratheon", "to": "Pycelle", "value": 7}, {"from": "Renly-Baratheon", "to": "Robb-Stark", "value": 3}, {"from": "Renly-Baratheon", "to": "Robert-Baratheon", "value": 42}, {"from": "Renly-Baratheon", "to": "Sandor-Clegane", "value": 7}, {"from": "Renly-Baratheon", "to": "Sansa-Stark", "value": 5}, {"from": "Renly-Baratheon", "to": "Tyrion-Lannister", "value": 4}, {"from": "Renly-Baratheon", "to": "Varys", "value": 9}, {"from": "Theon-Greyjoy", "to": "Bran-Stark", "value": 23}, {"from": "Theon-Greyjoy", "to": "Catelyn-Stark", "value": 9}, {"from": "Theon-Greyjoy", "to": "Eddard-Stark", "value": 5}, {"from": "Theon-Greyjoy", "to": "Jon-Snow", "value": 8}, {"from": "Theon-Greyjoy", "to": "Jory-Cassel", "value": 3}, {"from": "Theon-Greyjoy", "to": "Luwin", "value": 10}, {"from": "Theon-Greyjoy", "to": "Robb-Stark", "value": 37}, {"from": "Theon-Greyjoy", "to": "Rodrik-Cassel", "value": 6}, {"from": "Theon-Greyjoy", "to": "Tyrion-Lannister", "value": 3}, {"from": "Theon-Greyjoy", "to": "Tywin-Lannister", "value": 3}, {"from": "Jorah-Mormont", "to": "Daenerys-Targaryen", "value": 75}, {"from": "Jorah-Mormont", "to": "Drogo", "value": 16}, {"from": "Jorah-Mormont", "to": "Robert-Baratheon", "value": 3}, {"from": "Luwin", "to": "Bran-Stark", "value": 65}, {"from": "Luwin", "to": "Catelyn-Stark", "value": 14}, {"from": "Luwin", "to": "Eddard-Stark", "value": 16}, {"from": "Luwin", "to": "Jon-Snow", "value": 10}, {"from": "Luwin", "to": "Robb-Stark", "value": 20}, {"from": "Luwin", "to": "Rodrik-Cassel", "value": 3}, {"from": "Luwin", "to": "Tyrion-Lannister", "value": 10}, {"from": "Drogo", "to": "Daenerys-Targaryen", "value": 101}, {"from": "Drogo", "to": "Robert-Baratheon", "value": 3}, {"from": "Jon-Snow", "to": "Arya-Stark", "value": 37}, {"from": "Jon-Snow", "to": "Bran-Stark", "value": 56}, {"from": "Jon-Snow", "to": "Catelyn-Stark", "value": 14}, {"from": "Jon-Snow", "to": "Cersei-Lannister", "value": 4}, {"from": "Jon-Snow", "to": "Eddard-Stark", "value": 38}, {"from": "Jon-Snow", "to": "Jeor-Mormont", "value": 81}, {"from": "Jon-Snow", "to": "Joffrey-Baratheon", "value": 10}, {"from": "Jon-Snow", "to": "Jory-Cassel", "value": 3}, {"from": "Jon-Snow", "to": "Robb-Stark", "value": 53}, {"from": "Jon-Snow", "to": "Robert-Baratheon", "value": 18}, {"from": "Jon-Snow", "to": "Rodrik-Cassel", "value": 3}, {"from": "Jon-Snow", "to": "Samwell-Tarly", "value": 81}, {"from": "Jon-Snow", "to": "Sansa-Stark", "value": 8}, {"from": "Jon-Snow", "to": "Tyrion-Lannister", "value": 56}, {"from": "Jaime-Lannister", "to": "Catelyn-Stark", "value": 9}, {"from": "Jaime-Lannister", "to": "Cersei-Lannister", "value": 16}, {"from": "Jaime-Lannister", "to": "Eddard-Stark", "value": 27}, {"from": "Jaime-Lannister", "to": "Joffrey-Baratheon", "value": 12}, {"from": "Jaime-Lannister", "to": "Jon-Arryn", "value": 5}, {"from": "Jaime-Lannister", "to": "Jory-Cassel", "value": 4}, {"from": "Jaime-Lannister", "to": "Lysa-Arryn", "value": 6}, {"from": "Jaime-Lannister", "to": "Petyr-Baelish", "value": 7}, {"from": "Jaime-Lannister", "to": "Robb-Stark", "value": 9}, {"from": "Jaime-Lannister", "to": "Robert-Baratheon", "value": 24}, {"from": "Jaime-Lannister", "to": "Rodrik-Cassel", "value": 3}, {"from": "Jaime-Lannister", "to": "Sandor-Clegane", "value": 12}, {"from": "Jaime-Lannister", "to": "Sansa-Stark", "value": 3}, {"from": "Jaime-Lannister", "to": "Tyrion-Lannister", "value": 36}, {"from": "Jaime-Lannister", "to": "Tywin-Lannister", "value": 16}, {"from": "Jaime-Lannister", "to": "Varys", "value": 3}, {"from": "Sandor-Clegane", "to": "Arya-Stark", "value": 7}, {"from": "Sandor-Clegane", "to": "Cersei-Lannister", "value": 5}, {"from": "Sandor-Clegane", "to": "Eddard-Stark", "value": 10}, {"from": "Sandor-Clegane", "to": "Joffrey-Baratheon", "value": 24}, {"from": "Sandor-Clegane", "to": "Petyr-Baelish", "value": 3}, {"from": "Sandor-Clegane", "to": "Robert-Baratheon", "value": 9}, {"from": "Sandor-Clegane", "to": "Sansa-Stark", "value": 23}, {"from": "Sandor-Clegane", "to": "Tyrion-Lannister", "value": 5}, {"from": "Samwell-Tarly", "to": "Jeor-Mormont", "value": 8}, {"from": "Samwell-Tarly", "to": "Robb-Stark", "value": 4}, {"from": "Eddard-Stark", "to": "Arya-Stark", "value": 30}, {"from": "Eddard-Stark", "to": "Bran-Stark", "value": 19}, {"from": "Eddard-Stark", "to": "Catelyn-Stark", "value": 64}, {"from": "Eddard-Stark", "to": "Cersei-Lannister", "value": 69}, {"from": "Eddard-Stark", "to": "Daenerys-Targaryen", "value": 5}, {"from": "Eddard-Stark", "to": "Joffrey-Baratheon", "value": 26}, {"from": "Eddard-Stark", "to": "Jon-Arryn", "value": 47}, {"from": "Eddard-Stark", "to": "Jory-Cassel", "value": 32}, {"from": "Eddard-Stark", "to": "Lysa-Arryn", "value": 12}, {"from": "Eddard-Stark", "to": "Petyr-Baelish", "value": 81}, {"from": "Eddard-Stark", "to": "Pycelle", "value": 33}, {"from": "Eddard-Stark", "to": "Robb-Stark", "value": 16}, {"from": "Eddard-Stark", "to": "Robert-Baratheon", "value": 291}, {"from": "Eddard-Stark", "to": "Rodrik-Cassel", "value": 7}, {"from": "Eddard-Stark", "to": "Sansa-Stark", "value": 34}, {"from": "Eddard-Stark", "to": "Tyrion-Lannister", "value": 21}, {"from": "Eddard-Stark", "to": "Tywin-Lannister", "value": 18}, {"from": "Eddard-Stark", "to": "Varys", "value": 61}, {"from": "Arya-Stark", "to": "Bran-Stark", "value": 14}, {"from": "Arya-Stark", "to": "Catelyn-Stark", "value": 5}, {"from": "Arya-Stark", "to": "Cersei-Lannister", "value": 12}, {"from": "Arya-Stark", "to": "Joffrey-Baratheon", "value": 39}, {"from": "Arya-Stark", "to": "Jory-Cassel", "value": 12}, {"from": "Arya-Stark", "to": "Petyr-Baelish", "value": 3}, {"from": "Arya-Stark", "to": "Robb-Stark", "value": 15}, {"from": "Arya-Stark", "to": "Robert-Baratheon", "value": 8}, {"from": "Arya-Stark", "to": "Rodrik-Cassel", "value": 3}, {"from": "Arya-Stark", "to": "Sansa-Stark", "value": 104}, {"from": "Petyr-Baelish", "to": "Bran-Stark", "value": 3}, {"from": "Petyr-Baelish", "to": "Catelyn-Stark", "value": 22}, {"from": "Petyr-Baelish", "to": "Cersei-Lannister", "value": 13}, {"from": "Petyr-Baelish", "to": "Joffrey-Baratheon", "value": 11}, {"from": "Petyr-Baelish", "to": "Jon-Arryn", "value": 4}, {"from": "Petyr-Baelish", "to": "Jory-Cassel", "value": 8}, {"from": "Petyr-Baelish", "to": "Lysa-Arryn", "value": 4}, {"from": "Petyr-Baelish", "to": "Pycelle", "value": 14}, {"from": "Petyr-Baelish", "to": "Robert-Baratheon", "value": 30}, {"from": "Petyr-Baelish", "to": "Rodrik-Cassel", "value": 7}, {"from": "Petyr-Baelish", "to": "Sansa-Stark", "value": 8}, {"from": "Petyr-Baelish", "to": "Tyrion-Lannister", "value": 11}, {"from": "Petyr-Baelish", "to": "Varys", "value": 29}, {"from": "Robb-Stark", "to": "Bran-Stark", "value": 112}, {"from": "Robb-Stark", "to": "Catelyn-Stark", "value": 49}, {"from": "Robb-Stark", "to": "Joffrey-Baratheon", "value": 19}, {"from": "Robb-Stark", "to": "Jory-Cassel", "value": 9}, {"from": "Robb-Stark", "to": "Robert-Baratheon", "value": 6}, {"from": "Robb-Stark", "to": "Rodrik-Cassel", "value": 15}, {"from": "Robb-Stark", "to": "Sansa-Stark", "value": 13}, {"from": "Robb-Stark", "to": "Tyrion-Lannister", "value": 11}, {"from": "Robb-Stark", "to": "Tywin-Lannister", "value": 9}, {"from": "Bronn", "to": "Catelyn-Stark", "value": 6}, {"from": "Bronn", "to": "Rodrik-Cassel", "value": 4}, {"from": "Bronn", "to": "Tyrion-Lannister", "value": 61}, {"from": "Bronn", "to": "Tywin-Lannister", "value": 4}, {"from": "Jon-Arryn", "to": "Bran-Stark", "value": 7}, {"from": "Jon-Arryn", "to": "Catelyn-Stark", "value": 11}, {"from": "Jon-Arryn", "to": "Cersei-Lannister", "value": 7}, {"from": "Jon-Arryn", "to": "Lysa-Arryn", "value": 12}, {"from": "Jon-Arryn", "to": "Pycelle", "value": 11}, {"from": "Jon-Arryn", "to": "Robert-Baratheon", "value": 32}, {"from": "Jon-Arryn", "to": "Tyrion-Lannister", "value": 5}, {"from": "Jon-Arryn", "to": "Varys", "value": 5}, {"from": "Sansa-Stark", "to": "Bran-Stark", "value": 10}, {"from": "Sansa-Stark", "to": "Catelyn-Stark", "value": 9}, {"from": "Sansa-Stark", "to": "Cersei-Lannister", "value": 29}, {"from": "Sansa-Stark", "to": "Joffrey-Baratheon", "value": 87}, {"from": "Sansa-Stark", "to": "Jory-Cassel", "value": 9}, {"from": "Sansa-Stark", "to": "Pycelle", "value": 8}, {"from": "Sansa-Stark", "to": "Robert-Baratheon", "value": 26}, {"from": "Sansa-Stark", "to": "Tyrion-Lannister", "value": 3}, {"from": "Sansa-Stark", "to": "Varys", "value": 4}, {"from": "Cersei-Lannister", "to": "Bran-Stark", "value": 6}, {"from": "Cersei-Lannister", "to": "Catelyn-Stark", "value": 12}, {"from": "Cersei-Lannister", "to": "Joffrey-Baratheon", "value": 42}, {"from": "Cersei-Lannister", "to": "Jory-Cassel", "value": 5}, {"from": "Cersei-Lannister", "to": "Pycelle", "value": 9}, {"from": "Cersei-Lannister", "to": "Robert-Baratheon", "value": 72}, {"from": "Cersei-Lannister", "to": "Tyrion-Lannister", "value": 27}, {"from": "Cersei-Lannister", "to": "Tywin-Lannister", "value": 10}, {"from": "Cersei-Lannister", "to": "Varys", "value": 19}, {"from": "Lysa-Arryn", "to": "Catelyn-Stark", "value": 33}, {"from": "Lysa-Arryn", "to": "Robert-Baratheon", "value": 5}, {"from": "Lysa-Arryn", "to": "Tyrion-Lannister", "value": 25}, {"from": "Joffrey-Baratheon", "to": "Bran-Stark", "value": 3}, {"from": "Joffrey-Baratheon", "to": "Catelyn-Stark", "value": 4}, {"from": "Joffrey-Baratheon", "to": "Pycelle", "value": 4}, {"from": "Joffrey-Baratheon", "to": "Robert-Baratheon", "value": 30}, {"from": "Joffrey-Baratheon", "to": "Rodrik-Cassel", "value": 9}, {"from": "Joffrey-Baratheon", "to": "Tyrion-Lannister", "value": 13}, {"from": "Joffrey-Baratheon", "to": "Tywin-Lannister", "value": 3}, {"from": "Joffrey-Baratheon", "to": "Varys", "value": 7}, {"from": "Tywin-Lannister", "to": "Catelyn-Stark", "value": 7}, {"from": "Tywin-Lannister", "to": "Pycelle", "value": 4}, {"from": "Tywin-Lannister", "to": "Robert-Baratheon", "value": 13}, {"from": "Tywin-Lannister", "to": "Tyrion-Lannister", "value": 40}, {"from": "Tywin-Lannister", "to": "Varys", "value": 4}, {"from": "Varys", "to": "Catelyn-Stark", "value": 10}, {"from": "Varys", "to": "Daenerys-Targaryen", "value": 5}, {"from": "Varys", "to": "Pycelle", "value": 17}, {"from": "Varys", "to": "Robert-Baratheon", "value": 36}, {"from": "Varys", "to": "Tyrion-Lannister", "value": 3}, {"from": "Pycelle", "to": "Robert-Baratheon", "value": 26}, {"from": "Bran-Stark", "to": "Catelyn-Stark", "value": 18}, {"from": "Bran-Stark", "to": "Jeor-Mormont", "value": 4}, {"from": "Bran-Stark", "to": "Jory-Cassel", "value": 11}, {"from": "Bran-Stark", "to": "Robert-Baratheon", "value": 11}, {"from": "Bran-Stark", "to": "Rodrik-Cassel", "value": 6}, {"from": "Bran-Stark", "to": "Tyrion-Lannister", "value": 31}, {"from": "Tyrion-Lannister", "to": "Catelyn-Stark", "value": 49}, {"from": "Tyrion-Lannister", "to": "Jeor-Mormont", "value": 23}, {"from": "Tyrion-Lannister", "to": "Robert-Baratheon", "value": 18}, {"from": "Tyrion-Lannister", "to": "Rodrik-Cassel", "value": 10}, {"from": "Daenerys-Targaryen", "to": "Robert-Baratheon", "value": 11}, {"from": "Catelyn-Stark", "to": "Robert-Baratheon", "value": 22}, {"from": "Catelyn-Stark", "to": "Rodrik-Cassel", "value": 25}, {"from": "Rodrik-Cassel", "to": "Jory-Cassel", "value": 5}, {"from": "Robert-Baratheon", "to": "Jeor-Mormont", "value": 4}, {"from": "Robert-Baratheon", "to": "Jory-Cassel", "value": 7}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "barnesHut": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "gravitationalConstant": -80000,
+            "springConstant": 0.001,
+            "springLength": 250
+        },
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
